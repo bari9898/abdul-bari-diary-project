@@ -1,0 +1,219 @@
+# This program lets you write diary entries and search them
+
+import datetime
+
+# We'll store diary entries in a list
+diary_entries = []
+
+def show_welcome():
+    """Show welcome message"""
+    print("*" * 40)
+    print("    WELCOME TO YOUR DIGITAL DIARY!")
+    print("*" * 40)
+    print("📖 Write your daily thoughts!")
+    print("🔍 Search your old entries!")
+    print("📝 Keep track of your memories!")
+
+def show_menu():
+    """Show menu options"""
+    print("\n" + "=" * 30)
+    print("WHAT DO YOU WANT TO DO?")
+    print("=" * 30)
+    print("1. Write a new diary entry")
+    print("2. Read all my entries")
+    print("3. Search for a word")
+    print("4. Count my entries")
+    print("5. Exit")
+
+def write_entry():
+    """Write a new diary entry"""
+    print("\n📝 WRITING NEW ENTRY")
+    print("-" * 25)
+    
+    # Get today's date
+    today = datetime.date.today()
+    date_string = str(today)
+    
+    print(f"📅 Today's date: {date_string}")
+    
+    # Get entry from user
+    print("What do you want to write about today?")
+    user_entry = input("Type here: ")
+    
+    # Check if they wrote something
+    if user_entry == "":
+        print("❌ You didn't write anything!")
+        return
+    
+    # Add entry to our list
+    new_entry = {
+        "date": date_string,
+        "text": user_entry
+    }
+    diary_entries.append(new_entry)
+    
+    print("✅ Entry saved!")
+    print(f"You wrote {len(user_entry.split())} words today!")
+
+def read_all_entries():
+    """Read all diary entries using FOR LOOP"""
+    print("\n📚 ALL YOUR DIARY ENTRIES")
+    print("-" * 30)
+    
+    # Check if diary is empty
+    if len(diary_entries) == 0:
+        print("📝 No entries yet! Write your first entry!")
+        return
+    
+    # Use FOR LOOP to show each entry
+    entry_number = 1
+    for entry in diary_entries:
+        print(f"\n📖 Entry #{entry_number}")
+        print(f"📅 Date: {entry['date']}")
+        print(f"📝 What you wrote: {entry['text']}")
+        print("-" * 20)
+        entry_number = entry_number + 1
+    
+    print(f"\n📊 Total entries: {len(diary_entries)}")
+
+def search_entries():
+    """Search for entries with a word using FOR LOOP"""
+    print("\n🔍 SEARCH YOUR ENTRIES")
+    print("-" * 25)
+    
+    # Check if diary is empty
+    if len(diary_entries) == 0:
+        print("📝 No entries to search! Write some entries first!")
+        return
+    
+    # Get search word
+    search_word = input("What word do you want to find? ")
+    
+    if search_word == "":
+        print("❌ You need to type a word to search!")
+        return
+    
+    # Make search case-insensitive
+    search_word = search_word.lower()
+    
+    # Use FOR LOOP to search through entries
+    found_entries = []
+    for entry in diary_entries:
+        entry_text = entry['text'].lower()
+        if search_word in entry_text:
+            found_entries.append(entry)
+    
+    # Show results
+    if len(found_entries) == 0:
+        print(f"❌ No entries found with the word '{search_word}'")
+    else:
+        print(f"✅ Found {len(found_entries)} entries with '{search_word}':")
+        
+        # Use another FOR LOOP to show found entries
+        count = 1
+        for entry in found_entries:
+            print(f"\n🎯 Match #{count}")
+            print(f"📅 Date: {entry['date']}")
+            print(f"📝 Entry: {entry['text']}")
+            count = count + 1
+
+def count_entries():
+    """Count entries and show statistics using FOR LOOP"""
+    print("\n📊 DIARY STATISTICS")
+    print("-" * 20)
+    
+    if len(diary_entries) == 0:
+        print("📝 No entries yet!")
+        return
+    
+    # Count total entries
+    total_entries = len(diary_entries)
+    print(f"📚 Total entries: {total_entries}")
+    
+    # Count total words using FOR LOOP
+    total_words = 0
+    for entry in diary_entries:
+        words_in_entry = len(entry['text'].split())
+        total_words = total_words + words_in_entry
+    
+    print(f"📝 Total words written: {total_words}")
+    
+    # Calculate average words per entry
+    if total_entries > 0:
+        average_words = total_words / total_entries
+        print(f"📈 Average words per entry: {average_words:.1f}")
+    
+    # Show all dates using FOR LOOP
+    print("\n📅 All your writing dates:")
+    date_number = 1
+    for entry in diary_entries:
+        print(f"   {date_number}. {entry['date']}")
+        date_number = date_number + 1
+
+def save_to_file():
+    """Save all entries to a text file using FOR LOOP"""
+    try:
+        file = open("my_diary_backup.txt", "w")
+        
+        file.write("MY DIGITAL DIARY BACKUP\n")
+        file.write("=" * 30 + "\n\n")
+        
+        # Use FOR LOOP to write each entry
+        for entry in diary_entries:
+            file.write(f"Date: {entry['date']}\n")
+            file.write(f"Entry: {entry['text']}\n")
+            file.write("-" * 25 + "\n\n")
+        
+        file.close()
+        print("💾 Diary saved to 'my_diary_backup.txt'!")
+    except:
+        print("❌ Could not save to file!")
+
+def main():
+    """Main program using WHILE LOOP"""
+    show_welcome()
+    
+    # Main program loop - WHILE LOOP
+    running = True
+    while running:
+        show_menu()
+        
+        # Get user choice
+        choice = input("\nEnter your choice (1-5): ")
+        
+        # Process choice
+        if choice == "1":
+            write_entry()
+            
+        elif choice == "2":
+            read_all_entries()
+            
+        elif choice == "3":
+            search_entries()
+            
+        elif choice == "4":
+            count_entries()
+            
+        elif choice == "5":
+            print("\n🌟 GOODBYE!")
+            print("Thanks for using your digital diary!")
+            
+            # Ask if they want to save
+            save_choice = input("Do you want to save your diary to a file? (y/n): ")
+            if save_choice.lower() == "y" or save_choice.lower() == "yes":
+                save_to_file()
+            
+            print("See you next time! 👋")
+            running = False  # This ends the while loop
+            
+        else:
+            print("❌ Invalid choice! Please pick 1, 2, 3, 4, or 5.")
+        
+        # Pause before showing menu again (only if still running)
+        if running:
+            input("\nPress Enter to continue...")
+
+# Start the program
+print("Starting Digital Diary...")
+main()
+print("Program ended.")
